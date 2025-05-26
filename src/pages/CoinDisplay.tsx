@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState, useRef } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import * as THREE from 'three';
 import Coin3D from '../components/Coin3D';
 import CoinInfo from '../components/CoinInfo';
