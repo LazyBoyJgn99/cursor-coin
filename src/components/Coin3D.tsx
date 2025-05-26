@@ -10,6 +10,9 @@ interface Coin3DProps {
 const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
   console.log('Coin3D received data:', coinData); // 调试信息
   const meshRef = useRef<THREE.Group>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
+  const halo2Ref = useRef<THREE.Mesh>(null);
+  const halo3Ref = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
 
   // 根据稀有度设置颜色
@@ -29,7 +32,18 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += delta * 0.5; // 左右旋转
       meshRef.current.rotation.x += delta * 0.3; // 前后旋转
-      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.2;
+      // meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.2;
+    }
+    
+    // 稀有度光圈反向旋转
+    if (haloRef.current) {
+      haloRef.current.rotation.y -= delta * 0.5; // 反向旋转
+    }
+    if (halo2Ref.current) {
+      halo2Ref.current.rotation.y -= delta * 1; // 更快的反向旋转
+    }
+    if (halo3Ref.current) {
+      halo3Ref.current.rotation.y -= delta * 1.5; // 最快的反向旋转
     }
   });
 
@@ -268,64 +282,69 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
   };
 
   return (
-    <group
-      ref={meshRef}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-      scale={hovered ? 1.1 : 1}
-    >
-      {/* 主要的硬币圆柱体 - 暂时隐藏 */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[2, 2, 0.3, 32]} />
-        <meshStandardMaterial
-          color={coinColor}
-          metalness={0.8}
-          roughness={0.2}
-          emissive={coinColor}
-          emissiveIntensity={0.1}
-        />
-      </mesh>
-
-      {/* 硬币边缘装饰 */}
-      <mesh position={[0, 0, 0]}>
-        <torusGeometry args={[2, 0.05, 8, 32]} />
-        <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.1} />
-      </mesh>
-
-      {/* 正面的"Cursor"文字 */}
-      <group rotation={[0, 0, Math.PI / 2]} position={[0, 0.2, 0]} scale={[1.0, 1.0, 1.0]}>
-        <primitive object={createCursorText()} />
-      </group>
-
-      {/* 背面的"Cursor"文字（镜像） */}
-      <group rotation={[Math.PI, 0, Math.PI / 2]} position={[0, -0.2, 0]} scale={[1.0, 1.0, 1.0]}>
-        <primitive object={createCursorText()} />
-      </group>
-
-      {/* 序列号显示 - 放在硬币边缘 */}
-      {/* <mesh position={[0, -1.5, 0.16]}>
-        <boxGeometry args={[1.5, 0.1, 0.05]} />
-        <meshStandardMaterial color="#333333" metalness={0.6} roughness={0.4} />
-      </mesh> */}
-
-      {/* 稀有度光环效果 */}
-      {coinData.rarity !== 'common' && (
+    <>
+      <group
+        ref={meshRef}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+        scale={hovered ? 1.1 : 1}
+        rotation={[0, 0, Math.PI]}
+      >
+        {/* 主要的硬币圆柱体 - 暂时隐藏 */}
         <mesh position={[0, 0, 0]}>
-          <torusGeometry args={[2.5, 0.02, 8, 32]} />
+          <cylinderGeometry args={[2, 2, 0.3, 32]} />
           <meshStandardMaterial
             color={coinColor}
+            metalness={0.8}
+            roughness={0.2}
             emissive={coinColor}
-            emissiveIntensity={0.3}
-            transparent
-            opacity={0.6}
+            emissiveIntensity={0.1}
           />
         </mesh>
-      )}
 
-      {/* 传奇稀有度的额外粒子效果 */}
+        {/* 硬币边缘装饰 */}
+        {/* <mesh position={[0, 0, 0]}>
+          <torusGeometry args={[2, 0.05, 8, 32]} />
+          <meshStandardMaterial color="#FFD700" metalness={1} roughness={0.1} />
+        </mesh> */}
+
+        {/* 正面的"Cursor"文字 */}
+        <group rotation={[0, 0, Math.PI / 2]} position={[0, 0.2, 0]} scale={[1.0, 1.0, 1.0]}>
+          <primitive object={createCursorText()} />
+        </group>
+
+        {/* 背面的"Cursor"文字（镜像） */}
+        <group rotation={[Math.PI, 0, Math.PI / 2]} position={[0, -0.2, 0]} scale={[1.0, 1.0, 1.0]}>
+          <primitive object={createCursorText()} />
+        </group>
+
+        {/* 序列号显示 - 放在硬币边缘 */}
+        {/* <mesh position={[0, -1.5, 0.16]}>
+          <boxGeometry args={[1.5, 0.1, 0.05]} />
+          <meshStandardMaterial color="#333333" metalness={0.6} roughness={0.4} />
+        </mesh> */}
+      </group>
+
+      {/* 稀有度光环效果 - 独立于硬币组 */}
+
+        <>
+          <mesh ref={haloRef} position={[0, 0, 0]} >
+            <torusGeometry args={[2.5, 0.02, 8, 32]} />
+            <meshStandardMaterial
+              color={coinColor}
+              emissive={coinColor}
+              emissiveIntensity={0.3}
+              transparent
+              opacity={0.6}
+            />
+          </mesh>
+        </>
+
+
+      {/* 传奇稀有度的额外粒子效果 - 独立于硬币组 */}
       {coinData.rarity === 'legendary' && (
         <>
-          <mesh position={[0, 0, 0]}>
+          <mesh ref={halo2Ref} position={[0, 0, 0]}>
             <torusGeometry args={[3, 0.01, 8, 32]} />
             <meshStandardMaterial
               color="#FFD700"
@@ -335,7 +354,7 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
               opacity={0.4}
             />
           </mesh>
-          <mesh position={[0, 0, 0]}>
+          <mesh ref={halo3Ref} position={[0, 0, 0]}>
             <torusGeometry args={[3.5, 0.005, 8, 32]} />
             <meshStandardMaterial
               color="#FFA500"
@@ -347,7 +366,7 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
           </mesh>
         </>
       )}
-    </group>
+    </>
   );
 };
 

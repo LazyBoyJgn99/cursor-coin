@@ -136,9 +136,9 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ coinData }) => {
   const getRarityChance = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return '4%';
+        return '1%';
       default:
-        return '96%';
+        return '99%';
     }
   };
 
@@ -162,12 +162,12 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ coinData }) => {
           <div className="value">{getRarityText(coinData.rarity)}</div>
         </StatItem>
         <StatItem>
-          <div className="label">概率</div>
-          <div className="value">{getRarityChance(coinData.rarity)}</div>
+          <div className="label">所有者</div>
+          <div className="value">{"-"}</div>
         </StatItem>
         <StatItem>
           <div className="label">年份</div>
-          <div className="value">2024</div>
+          <div className="value">2025</div>
         </StatItem>
       </Stats>
     </Container>

@@ -76,7 +76,7 @@ export const generateCoinData = (key: string): CoinData => {
   // 根据稀有度设置名称和描述
   if (isLegendary) {
     name = 'Cursor 传奇纪念币';
-    description = '极其稀有的传奇纪念币，见证 Cursor 的辉煌时刻';
+    description = '见证 Cursor 的辉煌时刻，这是您专属的纪念币';
   } else {
     name = 'Cursor 纪念币';
     description = '感谢您使用 Cursor AI 代码编辑器，这是您专属的纪念币';
