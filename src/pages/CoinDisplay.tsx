@@ -247,11 +247,11 @@ const CoinDisplay: React.FC = () => {
         <ErrorContainer>
           <h1>😞 纪念币加载失败</h1>
           <p>
-            请确保您的URL包含有效的6位数字密钥
+            请确保您的URL包含有效的6位数字ID
             <br />
             URL格式应该类似于：
           </p>
-          <div className="example">https://your-domain.com?key=000001</div>
+          <div className="example">https://cursor.gkirito.com?id=000001</div>
         </ErrorContainer>
       </Container>
     );
