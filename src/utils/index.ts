@@ -1,13 +1,34 @@
-// 从URL中获取6位数密钥
+import { decryptFromCode, encryptToCode } from './encryption';
+
+// 从URL中获取加密密钥并解密为6位数字
 export const getCoinKeyFromUrl = (): string | null => {
   const urlParams = new URLSearchParams(window.location.search);
   const key = urlParams.get('key');
 
-  // 验证是否为6位数字
-  if (key && /^\d{6}$/.test(key)) {
+  if (!key) {
+    return null;
+  }
+
+  // 检查是否为4位字母数字组合（新的加密格式）
+  if (/^[a-z0-9]{4}$/.test(key)) {
+    try {
+      // 解密4位加密码为6位数字
+      const decryptedKey = decryptFromCode(key);
+      return decryptedKey;
+    } catch (error) {
+      console.error('解密失败:', error);
+      return null;
+    }
+  }
+
+  // 兼容旧格式：6位数字（可选，用于过渡期）
+  if (/^\d{6}$/.test(key)) {
+    console.warn('检测到旧格式的明文密钥，建议使用加密格式');
     return key;
   }
 
+  // 格式不正确
+  console.error('密钥格式不正确，应为4位字母数字组合');
   return null;
 };
 
@@ -69,3 +90,27 @@ export const generateCoinData = (key: string): CoinData => {
     rarity,
   };
 };
+
+// 生成包含加密密钥的URL
+export const generateEncryptedUrl = (sixDigitNumber: string, baseUrl: string = window.location.origin): string => {
+  try {
+    const encryptedKey = encryptToCode(sixDigitNumber);
+    return `${baseUrl}?key=${encryptedKey}`;
+  } catch (error) {
+    console.error('生成加密URL失败:', error);
+    throw error;
+  }
+};
+
+// 从6位数字获取对应的加密码
+export const getEncryptedKey = (sixDigitNumber: string): string => {
+  try {
+    return encryptToCode(sixDigitNumber);
+  } catch (error) {
+    console.error('获取加密码失败:', error);
+    throw error;
+  }
+};
+
+// 导出加密功能
+export { encryptToCode, generateEncryptionMap, testEncryption } from './encryption';
