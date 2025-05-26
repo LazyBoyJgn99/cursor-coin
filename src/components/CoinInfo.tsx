@@ -129,7 +129,7 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ coinData }) => {
       case 'legendary':
         return '传奇';
       default:
-        return '普通';
+        return '太棒了';
     }
   };
 
@@ -158,16 +158,16 @@ const CoinInfo: React.FC<CoinInfoProps> = ({ coinData }) => {
 
       <Stats>
         <StatItem>
-          <div className="label">稀有度</div>
-          <div className="value">{getRarityText(coinData.rarity)}</div>
+          <div className="label">year</div>
+          <div className="value">{new Date().getFullYear()}</div>
         </StatItem>
         <StatItem>
-          <div className="label">所有者</div>
-          <div className="value">{"-"}</div>
+          <div className="label">month</div>
+          <div className="value">{new Date().getMonth() + 1}</div>
         </StatItem>
         <StatItem>
-          <div className="label">年份</div>
-          <div className="value">2025</div>
+          <div className="label">day</div>
+          <div className="value">{new Date().getDate()}</div>
         </StatItem>
       </Stats>
     </Container>
