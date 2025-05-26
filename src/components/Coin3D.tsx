@@ -27,8 +27,8 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
   // 旋转和悬浮动画
   useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.5;
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.1;
+      meshRef.current.rotation.y += delta * 0.5; // 左右旋转
+      meshRef.current.rotation.x += delta * 0.3; // 前后旋转
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.2;
     }
   });
@@ -293,20 +293,20 @@ const Coin3D: React.FC<Coin3DProps> = ({ coinData }) => {
       </mesh>
 
       {/* 正面的"Cursor"文字 */}
-      <group rotation={[0, 0, Math.PI / 2]} position={[0, 0.5, 0.35]} scale={[1.0, 1.0, 1.0]}>
+      <group rotation={[0, 0, Math.PI / 2]} position={[0, 0.2, 0]} scale={[1.0, 1.0, 1.0]}>
         <primitive object={createCursorText()} />
       </group>
 
       {/* 背面的"Cursor"文字（镜像） */}
-      <group rotation={[0, Math.PI, Math.PI / 2]} position={[0, -0.5, -0.35]} scale={[1.0, 1.0, 1.0]}>
+      <group rotation={[Math.PI, 0, Math.PI / 2]} position={[0, -0.2, 0]} scale={[1.0, 1.0, 1.0]}>
         <primitive object={createCursorText()} />
       </group>
 
       {/* 序列号显示 - 放在硬币边缘 */}
-      <mesh position={[0, -1.5, 0.16]}>
+      {/* <mesh position={[0, -1.5, 0.16]}>
         <boxGeometry args={[1.5, 0.1, 0.05]} />
         <meshStandardMaterial color="#333333" metalness={0.6} roughness={0.4} />
-      </mesh>
+      </mesh> */}
 
       {/* 稀有度光环效果 */}
       {coinData.rarity !== 'common' && (
