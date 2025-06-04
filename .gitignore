@@ -188,3 +188,7 @@ storybook-static
 # Temporary files
 *.tmp
 *.temp 
+
+output
+
+output.zip
